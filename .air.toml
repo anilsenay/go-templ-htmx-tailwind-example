@@ -5,7 +5,7 @@ tmp_dir = "tmp"
 [build]
   args_bin = []
   bin = "./tmp/go-htmx-example"
-  cmd = "templ generate 2> /dev/null && go build -o ./tmp/go-htmx-example main.go"
+  cmd = "npx tailwindcss -i ./public/styles/tailwind-input.css -o ./public/styles/tailwind-output.css --minify && templ generate 2> /dev/null && go build -o ./tmp/go-htmx-example main.go"
   delay = 1000
   exclude_dir = ["assets", "tmp", "vendor", "testdata"]
   exclude_file = []

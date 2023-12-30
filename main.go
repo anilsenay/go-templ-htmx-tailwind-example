@@ -9,8 +9,9 @@ import (
 func main() {
 	app := fiber.New(fiber.Config{})
 
-	todoRepository := repository.NewTodoRepository()
+	app.Static("/", "./public")
 
+	todoRepository := repository.NewTodoRepository()
 	todoHandler := handler.NewTodoHandler(todoRepository)
 	app.Get("/", todoHandler.HandleTodoPage)
 	app.Put("/todos/:id/done", todoHandler.HandleUpdateDone)
