@@ -12,11 +12,10 @@ import "bytes"
 
 import "github.com/anilsenay/go-htmx-example/view/layout"
 import "github.com/anilsenay/go-htmx-example/view/components"
-import "github.com/anilsenay/go-htmx-example/models"
-import "fmt"
+import "github.com/anilsenay/go-htmx-example/model"
 
 type PageProps struct {
-	Todos []models.Todo
+	Todos []model.Todo
 }
 
 func Index(props PageProps) templ.Component {
@@ -42,8 +41,8 @@ func Index(props PageProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			for index, todo := range props.Todos {
-				templ_7745c5c3_Err = components.Todo(fmt.Sprintf("todo-%d", index), todo).Render(ctx, templ_7745c5c3_Buffer)
+			for _, todo := range props.Todos {
+				templ_7745c5c3_Err = components.Todo(todo).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

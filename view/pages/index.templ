@@ -2,18 +2,17 @@ package pages
 
 import "github.com/anilsenay/go-htmx-example/view/layout"
 import "github.com/anilsenay/go-htmx-example/view/components"
-import "github.com/anilsenay/go-htmx-example/models"
-import "fmt"
+import "github.com/anilsenay/go-htmx-example/model"
 
 type PageProps struct {
-	Todos []models.Todo
+	Todos []model.Todo
 }
 
 templ Index(props PageProps) {
 	@layout.Layout() {
 		<div>
-			for index, todo := range props.Todos {
-				@components.Todo(fmt.Sprintf("todo-%d", index), todo)
+			for _, todo := range props.Todos {
+				@components.Todo(todo)
 			}
 		</div>
 	}

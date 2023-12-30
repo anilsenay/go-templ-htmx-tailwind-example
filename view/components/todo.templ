@@ -1,10 +1,11 @@
 package components
 
-import "github.com/anilsenay/go-htmx-example/models"
+import "github.com/anilsenay/go-htmx-example/model"
+import "fmt"
 
-templ Todo(id string, todo models.Todo) {
+templ Todo(todo model.Todo) {
 	<p
-		id={ id }
+		id={ fmt.Sprintf("todo-%d", todo.Id) }
 		if todo.Done {
 			style="text-decoration: line-through"
 		}
