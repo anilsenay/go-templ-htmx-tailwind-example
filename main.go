@@ -2,15 +2,15 @@ package main
 
 import (
 	"github.com/a-h/templ"
-	"github.com/anilsenay/go-htmx-example/view"
+	"github.com/anilsenay/go-htmx-example/view/pages"
 	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
 	app := fiber.New(fiber.Config{})
 
-	app.Get("/hello", func(c *fiber.Ctx) error {
-		return render(c, view.Hello("World!"))
+	app.Get("/", func(c *fiber.Ctx) error {
+		return render(c, pages.Index("World!"))
 	})
 
 	_ = app.Listen(":8080")
