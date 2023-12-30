@@ -1,0 +1,14 @@
+package components
+
+import "github.com/anilsenay/go-htmx-example/models"
+
+templ Todo(id string, todo models.Todo) {
+	<p
+		id={ id }
+		if todo.Done {
+			style="text-decoration: line-through"
+		}
+	>
+		{ todo.Text }
+	</p>
+}
