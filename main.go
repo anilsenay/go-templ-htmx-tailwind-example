@@ -9,7 +9,7 @@ import (
 func main() {
 	app := fiber.New(fiber.Config{})
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/hello", func(c *fiber.Ctx) error {
 		return render(c, view.Hello("World!"))
 	})
 

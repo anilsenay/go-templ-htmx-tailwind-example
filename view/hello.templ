@@ -1,5 +1,9 @@
 package view
 
+import "github.com/anilsenay/go-htmx-example/view/layout"
+
 templ Hello(name string) {
-	<div>Hello, { name }</div>
+	@layout.Layout() {
+		<div>Hello, { name }</div>
+	}
 }
