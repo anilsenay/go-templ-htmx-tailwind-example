@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/anilsenay/go-htmx-example/model"
+	"github.com/anilsenay/go-htmx-example/view/components"
 	"github.com/anilsenay/go-htmx-example/view/pages"
 	"github.com/gofiber/fiber/v2"
 )
@@ -9,7 +10,7 @@ import (
 type todoRepository interface {
 	RetrieveAll() ([]model.Todo, error)
 	Insert(todo model.Todo) error
-	SetDone(id int) error
+	ChangeDone(id int) (*model.Todo, error)
 }
 
 type TodoHandler struct {
@@ -25,4 +26,16 @@ func NewTodoHandler(r todoRepository) *TodoHandler {
 func (h *TodoHandler) HandleTodoPage(ctx *fiber.Ctx) error {
 	todos, _ := h.todoRepository.RetrieveAll()
 	return render(ctx, pages.Index(pages.PageProps{Todos: todos}))
+}
+
+func (h *TodoHandler) HandleUpdateDone(ctx *fiber.Ctx) error {
+	id, err := ctx.ParamsInt("id")
+	if err != nil {
+		return err
+	}
+	todo, err := h.todoRepository.ChangeDone(id)
+	if err != nil {
+		return err
+	}
+	return render(ctx, components.Todo(*todo))
 }

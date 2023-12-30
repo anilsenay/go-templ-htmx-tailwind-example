@@ -13,6 +13,7 @@ func main() {
 
 	todoHandler := handler.NewTodoHandler(todoRepository)
 	app.Get("/", todoHandler.HandleTodoPage)
+	app.Put("/todos/:id/done", todoHandler.HandleUpdateDone)
 
 	_ = app.Listen(":8080")
 }

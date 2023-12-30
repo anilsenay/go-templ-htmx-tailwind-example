@@ -39,16 +39,16 @@ func (r *TodoRepository) Insert(todo model.Todo) error {
 	return nil
 }
 
-func (r *TodoRepository) SetDone(id int) error {
+func (r *TodoRepository) ChangeDone(id int) (*model.Todo, error) {
 	idx := slices.IndexFunc(r.todos, func(e model.Todo) bool {
 		return e.Id == id
 	})
 
 	if idx == -1 {
-		return fmt.Errorf("todo with id:%d not found", id)
+		return nil, fmt.Errorf("todo with id:%d not found", id)
 	}
 	r.mutex.Lock()
-	r.todos[idx].Done = true
+	r.todos[idx].Done = !r.todos[idx].Done
 	r.mutex.Unlock()
-	return nil
+	return &r.todos[idx], nil
 }

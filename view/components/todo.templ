@@ -5,6 +5,9 @@ import "fmt"
 
 templ Todo(todo model.Todo) {
 	<p
+		hx-put={ fmt.Sprintf("todos/%d/done", todo.Id) }
+		hx-trigger="click"
+		hx-swap="outerHTML"
 		id={ fmt.Sprintf("todo-%d", todo.Id) }
 		if todo.Done {
 			style="text-decoration: line-through"
