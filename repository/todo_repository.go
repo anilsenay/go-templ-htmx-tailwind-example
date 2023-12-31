@@ -30,13 +30,13 @@ func (r *TodoRepository) RetrieveAll() ([]model.Todo, error) {
 	return r.todos, nil
 }
 
-func (r *TodoRepository) Insert(todo model.Todo) error {
+func (r *TodoRepository) Insert(todo model.Todo) (model.Todo, error) {
 	r.mutex.Lock()
 	todo.Id = r.nextId
 	r.nextId++
 	r.todos = append(r.todos, todo)
 	r.mutex.Unlock()
-	return nil
+	return todo, nil
 }
 
 func (r *TodoRepository) ChangeDone(id int) (*model.Todo, error) {

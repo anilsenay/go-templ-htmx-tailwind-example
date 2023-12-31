@@ -15,6 +15,7 @@ func main() {
 	todoHandler := handler.NewTodoHandler(todoRepository)
 	app.Get("/", todoHandler.HandleTodoPage)
 	app.Put("/todos/:id/done", todoHandler.HandleUpdateDone)
+	app.Post("/todos", todoHandler.HandlePostTodo)
 
 	_ = app.Listen(":8080")
 }

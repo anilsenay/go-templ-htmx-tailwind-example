@@ -19,19 +19,35 @@ templ Index(props PageProps) {
 						</svg>
 						<h4 class="font-semibold ml-3 text-lg">My Todos</h4>
 					</div>
-					for _, todo := range props.Todos {
-						@components.Todo(todo)
-					}
-					<button class="flex items-center w-full h-8 px-2 mt-2 text-sm font-medium rounded">
-						<svg class="w-5 h-5 text-gray-400 fill-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-						</svg>
+					<div id="todos">
+						for _, todo := range props.Todos {
+							@components.Todo(todo)
+						}
+					</div>
+					<div
+						class="flex items-center w-full h-8 mt-2 text-sm font-medium rounded"
+					>
+						<button
+							id="post-button"
+							hx-post="/todos"
+							hx-trigger="click"
+							hx-include="[name='todo-text']"
+							hx-target="#todos"
+							hx-swap="beforeend"
+							class="flex items-center px-2 h-8"
+						>
+							<svg class="w-5 h-5 text-gray-400 fill-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+							</svg>
+						</button>
 						<input
-							class="flex-grow h-8 ml-4 p-0 bg-transparent placeholder:opacity-55 text-sm border-none outline-none focus:ring-0 focus:outline-none"
+							id="todo-input"
+							class="flex-grow h-8 ml-2.5 p-0 bg-transparent placeholder:opacity-55 text-sm border-none outline-none focus:ring-0 focus:outline-none"
+							name="todo-text"
 							type="text"
 							placeholder="add a new task"
 						/>
-					</button>
+					</div>
 				</div>
 			</div>
 		</div>
