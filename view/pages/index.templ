@@ -28,7 +28,7 @@ templ Index(props PageProps) {
 						hx-post="/todos"
 						hx-target="#todos"
 						hx-swap="beforeend"
-						hx-on::after-request="this.reset()"
+						hx-on::after-request="if(event.detail.successful) this.reset()"
 						class="flex items-center w-full h-8 mt-2 text-sm font-medium rounded"
 					>
 						<button
