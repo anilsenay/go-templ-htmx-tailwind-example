@@ -26,7 +26,10 @@ func NewTodoHandler(r todoRepository) *TodoHandler {
 }
 
 func (h *TodoHandler) HandleTodoPage(ctx *fiber.Ctx) error {
-	todos, _ := h.todoRepository.RetrieveAll()
+	todos, err := h.todoRepository.RetrieveAll()
+	if err != nil {
+		return render(ctx, pages.ErrorPage(fiber.StatusInternalServerError, "Internal Server Error: "+err.Error()))
+	}
 	return render(ctx, pages.Index(pages.PageProps{Todos: todos}))
 }
 
