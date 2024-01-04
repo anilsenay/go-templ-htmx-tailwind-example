@@ -22,7 +22,7 @@ func main() {
 	app.Post("/todos", todoHandler.HandlePostTodo)
 
 	// 404
-	app.Get("*", func(c *fiber.Ctx) error {
+	app.Use(func(c *fiber.Ctx) error {
 		c.Set(fiber.HeaderContentType, fiber.MIMETextHTML)
 		c.Status(fiber.StatusNotFound)
 		return pages.NotFound().Render(c.UserContext(), c.Response().BodyWriter())

@@ -11,8 +11,8 @@ templ:
 
 ## tailwind: build tailwind
 tailwind:
-	npx tailwindcss -i ./public/styles/tailwind-input.css -o ./public/styles/tailwind-output.css --minify
+	tailwindcss -i ./public/styles/tailwind-input.css -o ./public/styles/tailwind-output.css --minify
 
 ## tailwind-watch: watch build tailwind
 tailwind-watch:
-	npx tailwindcss -i ./public/styles/tailwind-input.css -o ./public/styles/tailwind-output.css --watch
+	tailwindcss -i ./public/styles/tailwind-input.css -o ./public/styles/tailwind-output.css --watch

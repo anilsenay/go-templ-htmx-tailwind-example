@@ -3,5 +3,5 @@ package pages
 const not_found_msg = "Oops! The page you are looking for could not be found."
 
 templ NotFound() {
-	@ErrorPage(404, "Oops! The page you are looking for could not be found.")
+	@ErrorPage(404, not_found_msg)
 }
