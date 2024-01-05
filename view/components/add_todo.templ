@@ -29,8 +29,24 @@ templ icon() {
 	</svg>
 }
 
+templ AddTodoErrorText(err error) {
+	<span
+		id="validation-error"
+		class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1"
+		hx-swap-oob="true"
+		if err == nil {
+			style="display:none"
+		}
+	>
+		if err != nil {
+			{ err.Error() }
+		}
+	</span>
+}
+
 templ AddTodo() {
 	<form
+		id="add-todo"
 		hx-post="/todos"
 		hx-target="#todos"
 		hx-swap="beforeend"
@@ -54,4 +70,5 @@ templ AddTodo() {
 			placeholder="add a new task"
 		/>
 	</form>
+	@AddTodoErrorText(nil)
 }

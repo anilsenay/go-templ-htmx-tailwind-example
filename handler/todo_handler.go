@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/anilsenay/go-htmx-example/model"
 	"github.com/anilsenay/go-htmx-example/view/components"
@@ -36,13 +36,17 @@ func (h *TodoHandler) HandleTodoPage(ctx *fiber.Ctx) error {
 func (h *TodoHandler) HandlePostTodo(ctx *fiber.Ctx) error {
 	todoText := ctx.FormValue("todo-text")
 	if todoText == "" {
-		return fmt.Errorf("Todo text can not be empty")
+		return render(ctx, components.AddTodoErrorText(errors.New("Todo text can not be empty")))
 	}
 	todo, err := h.todoRepository.Insert(model.Todo{Text: todoText})
 	if err != nil {
-		return err
+		return render(ctx, components.AddTodoErrorText(errors.New("We cannot complete your request at this time")))
 	}
-	return render(ctx, components.Todo(todo))
+	return combine(
+		ctx,
+		components.Todo(todo),
+		components.AddTodoErrorText(nil),
+	)
 }
 
 func (h *TodoHandler) HandleUpdateDone(ctx *fiber.Ctx) error {

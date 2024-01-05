@@ -62,7 +62,7 @@ func icon() templ.Component {
 	})
 }
 
-func AddTodo() templ.Component {
+func AddTodoErrorText(err error) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -75,7 +75,56 @@ func AddTodo() templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form hx-post=\"/todos\" hx-target=\"#todos\" hx-swap=\"beforeend\" hx-on::after-request=\"if(event.detail.successful) { this.reset() }\" hx-disabled-elt=\"#post-button\" hx-indicator=\"#spinner\" class=\"flex items-center w-full h-8 mt-2 text-sm font-medium rounded\"><button id=\"post-button\" type=\"submit\" class=\"flex items-center px-2 h-8\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<span id=\"validation-error\" class=\"flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1\" hx-swap-oob=\"true\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if err == nil {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" style=\"display:none\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if err != nil {
+			var templ_7745c5c3_Var4 string
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(err.Error())
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/components/add_todo.templ`, Line: 41, Col: 16}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if !templ_7745c5c3_IsBuffer {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteTo(templ_7745c5c3_W)
+		}
+		return templ_7745c5c3_Err
+	})
+}
+
+func AddTodo() templ.Component {
+	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
+		if !templ_7745c5c3_IsBuffer {
+			templ_7745c5c3_Buffer = templ.GetBuffer()
+			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var5 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var5 == nil {
+			templ_7745c5c3_Var5 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form id=\"add-todo\" hx-post=\"/todos\" hx-target=\"#todos\" hx-swap=\"beforeend\" hx-on::after-request=\"if(event.detail.successful) { this.reset() }\" hx-disabled-elt=\"#post-button\" hx-indicator=\"#spinner\" class=\"flex items-center w-full h-8 mt-2 text-sm font-medium rounded\"><button id=\"post-button\" type=\"submit\" class=\"flex items-center px-2 h-8\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -84,6 +133,10 @@ func AddTodo() templ.Component {
 			return templ_7745c5c3_Err
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</button> <input id=\"todo-input\" class=\"flex-grow h-8 ml-2.5 p-0 bg-transparent placeholder:opacity-55 text-sm border-none outline-none focus:ring-0 focus:outline-none\" name=\"todo-text\" type=\"text\" placeholder=\"add a new task\"></form>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = AddTodoErrorText(nil).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
