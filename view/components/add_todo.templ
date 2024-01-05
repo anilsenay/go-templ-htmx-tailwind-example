@@ -1,5 +1,7 @@
 package components
 
+import "fmt"
+
 templ icon() {
 	<style type="text/css">
       .my-indicator{
@@ -44,11 +46,11 @@ templ AddTodoErrorText(err error) {
 	</span>
 }
 
-templ AddTodo() {
+templ AddTodo(collectionId int) {
 	<form
 		id="add-todo"
-		hx-post="/todos"
-		hx-target="#todos"
+		hx-post={ fmt.Sprintf("/%d/todo", collectionId) }
+		hx-target="#todo-list"
 		hx-swap="beforeend"
 		hx-on::after-request="if(event.detail.successful) { this.reset() }"
 		hx-disabled-elt="#post-button"

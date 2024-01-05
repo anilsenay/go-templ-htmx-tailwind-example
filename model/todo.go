@@ -6,8 +6,13 @@ type Todo struct {
 	Done bool
 }
 
-type TodoList struct {
+type Collection struct {
 	Id       int
 	Name     string
 	HexColor string
+}
+
+type CollectionWithTodoList struct {
+	Collection
+	List []Todo
 }

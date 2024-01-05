@@ -16,11 +16,11 @@ templ Checkbox(checked bool) {
 	</span>
 }
 
-templ removeTodo(id int) {
+templ removeTodo(collectionId int, id int) {
 	<button
 		class="ml-auto"
 		onclick="event.stopPropagation();"
-		hx-delete={ fmt.Sprintf("todos/%d", id) }
+		hx-delete={ fmt.Sprintf("/%d/todo/%d", collectionId, id) }
 		hx-confirm="Are you sure?"
 		hx-target="closest div"
 		hx-swap="outerHTML swap:500ms"
@@ -31,10 +31,10 @@ templ removeTodo(id int) {
 	</button>
 }
 
-templ Todo(todo model.Todo) {
+templ Todo(collectionId int, todo model.Todo) {
 	<div
 		class="todo"
-		hx-put={ fmt.Sprintf("todos/%d/done", todo.Id) }
+		hx-put={ fmt.Sprintf("/%d/todo/%d/done", collectionId, todo.Id) }
 		hx-trigger="click"
 		hx-swap="outerHTML"
 	>
@@ -54,7 +54,7 @@ templ Todo(todo model.Todo) {
 			>
 				{ todo.Text }
 			</span>
-			@removeTodo(todo.Id)
+			@removeTodo(collectionId, todo.Id)
 		</label>
 	</div>
 }

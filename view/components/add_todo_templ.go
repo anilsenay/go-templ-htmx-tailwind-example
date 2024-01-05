@@ -10,6 +10,8 @@ import "context"
 import "io"
 import "bytes"
 
+import "fmt"
+
 func icon() templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
@@ -93,7 +95,7 @@ func AddTodoErrorText(err error) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(err.Error())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/components/add_todo.templ`, Line: 41, Col: 16}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/components/add_todo.templ`, Line: 43, Col: 16}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -111,7 +113,7 @@ func AddTodoErrorText(err error) templ.Component {
 	})
 }
 
-func AddTodo() templ.Component {
+func AddTodo(collectionId int) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -124,7 +126,15 @@ func AddTodo() templ.Component {
 			templ_7745c5c3_Var5 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form id=\"add-todo\" hx-post=\"/todos\" hx-target=\"#todos\" hx-swap=\"beforeend\" hx-on::after-request=\"if(event.detail.successful) { this.reset() }\" hx-disabled-elt=\"#post-button\" hx-indicator=\"#spinner\" class=\"flex items-center w-full h-8 mt-2 text-sm font-medium rounded\"><button id=\"post-button\" type=\"submit\" class=\"flex items-center px-2 h-8\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form id=\"add-todo\" hx-post=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(fmt.Sprintf("/%d/todo", collectionId)))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#todo-list\" hx-swap=\"beforeend\" hx-on::after-request=\"if(event.detail.successful) { this.reset() }\" hx-disabled-elt=\"#post-button\" hx-indicator=\"#spinner\" class=\"flex items-center w-full h-8 mt-2 text-sm font-medium rounded\"><button id=\"post-button\" type=\"submit\" class=\"flex items-center px-2 h-8\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

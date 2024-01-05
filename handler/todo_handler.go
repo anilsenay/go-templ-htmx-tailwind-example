@@ -10,10 +10,11 @@ import (
 )
 
 type todoRepository interface {
-	RetrieveAll() ([]model.Todo, error)
-	Insert(todo model.Todo) (model.Todo, error)
-	ChangeDone(id int) (*model.Todo, error)
-	Delete(id int) error
+	GetCollections() ([]model.Collection, error)
+	GetTodoByCollection(id int) (model.CollectionWithTodoList, error)
+	Insert(collectionId int, todo model.Todo) (model.Todo, error)
+	ChangeDone(collectionId int, id int) (*model.Todo, error)
+	Delete(collectionId int, id int) error
 }
 
 type TodoHandler struct {
@@ -26,48 +27,81 @@ func NewTodoHandler(r todoRepository) *TodoHandler {
 	}
 }
 
-func (h *TodoHandler) HandleTodoPage(ctx *fiber.Ctx) error {
-	todos, err := h.todoRepository.RetrieveAll()
+func (h *TodoHandler) HandleIndexPage(ctx *fiber.Ctx) error {
+	collections, err := h.todoRepository.GetCollections()
 	if err != nil {
 		return render(ctx, pages.ErrorPage(fiber.StatusInternalServerError, "Internal Server Error: "+err.Error()))
 	}
-	return render(ctx, pages.Index(pages.PageProps{Todos: todos}))
+	return render(ctx, pages.TodoPage(pages.TodoPageProps{Collections: collections}))
+}
+
+func (h *TodoHandler) HandleTodoPage(ctx *fiber.Ctx) error {
+	collectionId, err := ctx.ParamsInt("collectionId")
+	if err != nil {
+		return err
+	}
+
+	collections, err := h.todoRepository.GetCollections()
+	if err != nil {
+		return render(ctx, pages.ErrorPage(fiber.StatusInternalServerError, "Internal Server Error: "+err.Error()))
+	}
+
+	todo, err := h.todoRepository.GetTodoByCollection(collectionId)
+	if err != nil {
+		return render(ctx, pages.ErrorPage(fiber.StatusInternalServerError, "Internal Server Error: "+err.Error()))
+	}
+	return render(ctx, pages.TodoPage(pages.TodoPageProps{Collections: collections, ColllectionWithTodo: todo, Active: collectionId}))
 }
 
 func (h *TodoHandler) HandlePostTodo(ctx *fiber.Ctx) error {
+	collectionId, err := ctx.ParamsInt("collectionId")
+	if err != nil {
+		return err
+	}
+
 	todoText := ctx.FormValue("todo-text")
 	if todoText == "" {
 		return render(ctx, components.AddTodoErrorText(errors.New("Todo text can not be empty")))
 	}
-	todo, err := h.todoRepository.Insert(model.Todo{Text: todoText})
+	todo, err := h.todoRepository.Insert(collectionId, model.Todo{Text: todoText})
 	if err != nil {
 		return render(ctx, components.AddTodoErrorText(errors.New("We cannot complete your request at this time")))
 	}
 	return combine(
 		ctx,
-		components.Todo(todo),
+		components.Todo(collectionId, todo),
 		components.AddTodoErrorText(nil),
 	)
 }
 
 func (h *TodoHandler) HandleUpdateDone(ctx *fiber.Ctx) error {
+	collectionId, err := ctx.ParamsInt("collectionId")
+	if err != nil {
+		return err
+	}
+
 	id, err := ctx.ParamsInt("id")
 	if err != nil {
 		return err
 	}
-	todo, err := h.todoRepository.ChangeDone(id)
+	todo, err := h.todoRepository.ChangeDone(collectionId, id)
 	if err != nil {
 		return err
 	}
-	return render(ctx, components.Todo(*todo))
+	return render(ctx, components.Todo(collectionId, *todo))
 }
 
 func (h *TodoHandler) HandleDeleteTodo(ctx *fiber.Ctx) error {
+	collectionId, err := ctx.ParamsInt("collectionId")
+	if err != nil {
+		return err
+	}
+
 	id, err := ctx.ParamsInt("id")
 	if err != nil {
 		return err
 	}
-	err = h.todoRepository.Delete(id)
+	err = h.todoRepository.Delete(collectionId, id)
 	if err != nil {
 		return err
 	}

@@ -8,53 +8,100 @@ import (
 	"github.com/anilsenay/go-htmx-example/model"
 )
 
-var initialData = []model.Todo{
-	{Id: 1, Text: "Todo 1", Done: true},
-	{Id: 2, Text: "Todo 2"},
+var initialCollections = []model.Collection{
+	{Id: 1, Name: "My Todo", HexColor: "#d489d9"},
+	{Id: 2, Name: "My Todo 2", HexColor: "#86dbdb"},
+}
+
+var todoByCollection = map[int][]model.Todo{
+	1: {{Id: 1, Text: "List 1 Todo 1", Done: true}, {Id: 2, Text: "List 1 Todo 2"}},
+	2: {{Id: 3, Text: "List 2 Todo 1", Done: true}, {Id: 4, Text: "List 2 Todo 2"}},
 }
 
 type TodoRepository struct {
-	todos  []model.Todo
-	mutex  sync.RWMutex
-	nextId int
+	collections      []model.Collection
+	todoByCollection map[int][]model.Todo
+	mutex            sync.RWMutex
+	nextId           int
 }
 
 func NewTodoRepository() *TodoRepository {
 	return &TodoRepository{
-		todos:  initialData,
-		nextId: len(initialData) + 1,
+		collections:      initialCollections,
+		todoByCollection: todoByCollection,
+		nextId:           5,
 	}
 }
 
-func (r *TodoRepository) RetrieveAll() ([]model.Todo, error) {
-	return r.todos, nil
+func (r *TodoRepository) findCollectionById(id int) *model.Collection {
+	idx := slices.IndexFunc(r.collections, func(e model.Collection) bool {
+		return e.Id == id
+	})
+	if idx == -1 {
+		return nil
+	}
+	return &r.collections[idx]
 }
 
-func (r *TodoRepository) Insert(todo model.Todo) (model.Todo, error) {
+func (r *TodoRepository) findTodoById(collectionId int, id int) *model.Todo {
+	todo, found := r.todoByCollection[collectionId]
+	if !found {
+		return nil
+	}
+	idx := slices.IndexFunc(todo, func(e model.Todo) bool {
+		return e.Id == id
+	})
+	if idx == -1 {
+		return nil
+	}
+	return &todo[idx]
+}
+
+func (r *TodoRepository) GetCollections() ([]model.Collection, error) {
+	return r.collections, nil
+}
+
+func (r *TodoRepository) GetTodoByCollection(id int) (model.CollectionWithTodoList, error) {
+	collection := r.findCollectionById(id)
+	if collection == nil {
+		return model.CollectionWithTodoList{}, fmt.Errorf("list with id %d not found", id)
+	}
+	return model.CollectionWithTodoList{Collection: *collection, List: r.todoByCollection[id]}, nil
+}
+
+func (r *TodoRepository) Insert(collectionId int, todo model.Todo) (model.Todo, error) {
+	_, found := r.todoByCollection[collectionId]
+	if !found {
+		return todo, fmt.Errorf("list with id %d not found", collectionId)
+	}
+
 	r.mutex.Lock()
 	todo.Id = r.nextId
 	r.nextId++
-	r.todos = append(r.todos, todo)
+	r.todoByCollection[collectionId] = append(r.todoByCollection[collectionId], todo)
 	r.mutex.Unlock()
 	return todo, nil
 }
 
-func (r *TodoRepository) ChangeDone(id int) (*model.Todo, error) {
-	idx := slices.IndexFunc(r.todos, func(e model.Todo) bool {
-		return e.Id == id
-	})
-
-	if idx == -1 {
+func (r *TodoRepository) ChangeDone(collectionId int, id int) (*model.Todo, error) {
+	todo := r.findTodoById(collectionId, id)
+	if todo == nil {
 		return nil, fmt.Errorf("todo with id:%d not found", id)
 	}
+
 	r.mutex.Lock()
-	r.todos[idx].Done = !r.todos[idx].Done
+	todo.Done = !todo.Done
 	r.mutex.Unlock()
-	return &r.todos[idx], nil
+	return todo, nil
 }
 
-func (r *TodoRepository) Delete(id int) error {
-	idx := slices.IndexFunc(r.todos, func(e model.Todo) bool {
+func (r *TodoRepository) Delete(collectionId int, id int) error {
+	todo, found := r.todoByCollection[collectionId]
+	if !found {
+		return fmt.Errorf("collection with id:%d not found", collectionId)
+	}
+
+	idx := slices.IndexFunc(todo, func(e model.Todo) bool {
 		return e.Id == id
 	})
 	if idx == -1 {
@@ -62,7 +109,7 @@ func (r *TodoRepository) Delete(id int) error {
 	}
 
 	r.mutex.Lock()
-	r.todos = append(r.todos[:idx], r.todos[idx+1:]...)
+	r.todoByCollection[collectionId] = append(r.todoByCollection[collectionId][:idx], r.todoByCollection[collectionId][idx+1:]...)
 	r.mutex.Unlock()
 	return nil
 }

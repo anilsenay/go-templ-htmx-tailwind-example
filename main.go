@@ -17,10 +17,11 @@ func main() {
 	todoHandler := handler.NewTodoHandler(todoRepository)
 
 	// todo routes
-	app.Get("/", todoHandler.HandleTodoPage)
-	app.Put("/todos/:id/done", todoHandler.HandleUpdateDone)
-	app.Post("/todos", todoHandler.HandlePostTodo)
-	app.Delete("/todos/:id", todoHandler.HandleDeleteTodo)
+	app.Get("/:collectionId", todoHandler.HandleTodoPage)
+	app.Get("/", todoHandler.HandleIndexPage)
+	app.Put("/:collectionId/todo/:id/done", todoHandler.HandleUpdateDone)
+	app.Post("/:collectionId/todo", todoHandler.HandlePostTodo)
+	app.Delete("/:collectionId/todo/:id", todoHandler.HandleDeleteTodo)
 
 	// 404
 	app.Use(func(c *fiber.Ctx) error {
