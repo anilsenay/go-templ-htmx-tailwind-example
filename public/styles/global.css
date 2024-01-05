@@ -1,0 +1,4 @@
+.todo.htmx-swapping {
+  opacity: 0;
+  transition: opacity 500ms ease-out;
+}

@@ -52,3 +52,17 @@ func (r *TodoRepository) ChangeDone(id int) (*model.Todo, error) {
 	r.mutex.Unlock()
 	return &r.todos[idx], nil
 }
+
+func (r *TodoRepository) Delete(id int) error {
+	idx := slices.IndexFunc(r.todos, func(e model.Todo) bool {
+		return e.Id == id
+	})
+	if idx == -1 {
+		return fmt.Errorf("todo with id:%d not found", id)
+	}
+
+	r.mutex.Lock()
+	r.todos = append(r.todos[:idx], r.todos[idx+1:]...)
+	r.mutex.Unlock()
+	return nil
+}

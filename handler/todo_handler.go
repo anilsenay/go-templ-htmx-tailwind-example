@@ -13,6 +13,7 @@ type todoRepository interface {
 	RetrieveAll() ([]model.Todo, error)
 	Insert(todo model.Todo) (model.Todo, error)
 	ChangeDone(id int) (*model.Todo, error)
+	Delete(id int) error
 }
 
 type TodoHandler struct {
@@ -59,4 +60,16 @@ func (h *TodoHandler) HandleUpdateDone(ctx *fiber.Ctx) error {
 		return err
 	}
 	return render(ctx, components.Todo(*todo))
+}
+
+func (h *TodoHandler) HandleDeleteTodo(ctx *fiber.Ctx) error {
+	id, err := ctx.ParamsInt("id")
+	if err != nil {
+		return err
+	}
+	err = h.todoRepository.Delete(id)
+	if err != nil {
+		return err
+	}
+	return nil
 }

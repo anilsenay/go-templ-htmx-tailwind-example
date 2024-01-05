@@ -20,6 +20,7 @@ func main() {
 	app.Get("/", todoHandler.HandleTodoPage)
 	app.Put("/todos/:id/done", todoHandler.HandleUpdateDone)
 	app.Post("/todos", todoHandler.HandlePostTodo)
+	app.Delete("/todos/:id", todoHandler.HandleDeleteTodo)
 
 	// 404
 	app.Use(func(c *fiber.Ctx) error {
