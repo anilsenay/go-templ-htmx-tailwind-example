@@ -1,0 +1,45 @@
+package layout
+
+import "github.com/anilsenay/go-htmx-example/model"
+
+type PageProps struct {
+	MenuItems model.TodoList
+	Active    int
+}
+
+var todoList = []struct {
+	Id       int
+	Name     string
+	HexColor string
+}{{1, "My Todo", "#d489d9"}, {2, "My Todo 2", "#86dbdb"}, {3, "My Todo 3", "#85ec91"}, {4, "My Todo 4", "#85adec"}, {5, "My Todo 5", "#ecac85"}}
+
+func generateBgColor(hex string) templ.Attributes {
+	return templ.Attributes{"style": "background-color:" + hex}
+}
+
+templ PageLayout(props PageProps) {
+	@Layout() {
+		<div class="grid grid-cols-5">
+			<aside
+				class="col-span-1 flex flex-col space-y-2 border-r-2 border-gray-200 bg-white"
+			>
+				<p class="font-semibold text-md px-6 py-7 pb-3">Collections</p>
+				for _, t := range todoList {
+					<a
+						href="#"
+						class="flex items-center space-x-2 rounded-md px-6 py-3 hover:bg-gray-100 hover:text-blue-600"
+					>
+						<div
+							{ generateBgColor(t.HexColor)... }
+							class="w-7 h-7 rounded-md bg-red-200"
+						></div>
+						<span class={ "text-md", templ.KV("font-semibold", t.Id == props.Active) }>{ t.Name }</span>
+					</a>
+				}
+			</aside>
+			<div class="col-span-4">
+				{ children... }
+			</div>
+		</div>
+	}
+}
