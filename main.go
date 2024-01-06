@@ -26,8 +26,10 @@ func main() {
 
 	// collection routes
 	app.Get("/collection/new", collectionHandler.HandleNewModal)
+	app.Get("/collection/edit/:id", collectionHandler.HandleEditModal)
 	app.Get("/collection/close", collectionHandler.HandleCloseModal)
 	app.Post("/collection/", collectionHandler.HandleCreateCollection)
+	app.Put("/collection/:id", collectionHandler.HandleUpdateCollection)
 
 	// 404
 	app.Use(func(c *fiber.Ctx) error {

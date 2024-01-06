@@ -13,10 +13,11 @@ import "bytes"
 import "github.com/anilsenay/go-htmx-example/view/layout"
 import "github.com/anilsenay/go-htmx-example/view/components"
 import "github.com/anilsenay/go-htmx-example/model"
+import "fmt"
 
 type TodoPageProps struct {
-	ColllectionWithTodo model.CollectionWithTodoList
-	PageLayoutProps     layout.PageProps
+	CollectionWithTodo model.CollectionWithTodoList
+	PageLayoutProps    layout.PageProps
 }
 
 func TodoPage(props TodoPageProps) templ.Component {
@@ -47,29 +48,37 @@ func TodoPage(props TodoPageProps) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(props.ColllectionWithTodo.HexColor))
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(props.CollectionWithTodo.HexColor))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4\"></path></svg><h4 class=\"font-semibold ml-3 text-lg\">")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4\"></path></svg><h4 class=\"font-semibold ml-3 text-lg w-full\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var3 string
-				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(props.ColllectionWithTodo.Name)
+				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(props.CollectionWithTodo.Name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/pages/todo.templ`, Line: 28, Col: 40}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/pages/todo.templ`, Line: 29, Col: 39}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h4></div><div id=\"todo-list\">")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h4><div hx-get=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				for _, todo := range props.ColllectionWithTodo.List {
-					templ_7745c5c3_Err = components.Todo(props.ColllectionWithTodo.Collection.Id, todo).Render(ctx, templ_7745c5c3_Buffer)
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(fmt.Sprintf("/collection/edit/%d", props.CollectionWithTodo.Id)))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"body\" hx-swap=\"beforeend\" class=\"flex items-center justify-center flex-1 h-full p-2 border border-gray-400 rounded-lg cursor-pointer\"><div class=\"relative\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-4 w-4\" viewBox=\"0 0 20 20\" fill=\"currentColor\"><path d=\"M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z\"></path></svg></div></div></div><div id=\"todo-list\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				for _, todo := range props.CollectionWithTodo.List {
+					templ_7745c5c3_Err = components.Todo(props.CollectionWithTodo.Collection.Id, todo).Render(ctx, templ_7745c5c3_Buffer)
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -78,7 +87,7 @@ func TodoPage(props TodoPageProps) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = components.AddTodo(props.ColllectionWithTodo.Collection.Id).Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = components.AddTodo(props.CollectionWithTodo.Collection.Id).Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

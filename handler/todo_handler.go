@@ -54,8 +54,8 @@ func (h *TodoHandler) HandleTodoPage(ctx *fiber.Ctx) error {
 		return render(ctx, pages.ErrorPage(fiber.StatusInternalServerError, "Internal Server Error: "+err.Error()))
 	}
 	return render(ctx, pages.TodoPage(pages.TodoPageProps{
-		ColllectionWithTodo: todo,
-		PageLayoutProps:     layout.PageProps{Active: collectionId, MenuItems: collections, Title: todo.Name},
+		CollectionWithTodo: todo,
+		PageLayoutProps:    layout.PageProps{Active: collectionId, MenuItems: collections, Title: todo.Name},
 	}))
 }
 

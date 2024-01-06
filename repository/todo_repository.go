@@ -59,6 +59,14 @@ func (r *TodoRepository) findTodoById(collectionId int, id int) *model.Todo {
 	return &todo[idx]
 }
 
+func (r *TodoRepository) GetCollection(id int) (model.Collection, error) {
+	collection := r.findCollectionById(id)
+	if collection == nil {
+		return model.Collection{}, fmt.Errorf("collection with id %d not found", id)
+	}
+	return *collection, nil
+}
+
 func (r *TodoRepository) GetCollections() ([]model.Collection, error) {
 	return r.collections, nil
 }
@@ -124,4 +132,20 @@ func (r *TodoRepository) InsertCollection(collection model.Collection) (model.Co
 	r.todoByCollection[collection.Id] = []model.Todo{}
 	r.mutex.Unlock()
 	return collection, nil
+}
+
+func (r *TodoRepository) UpdateCollection(id int, updates model.Collection) (model.Collection, error) {
+	collection := r.findCollectionById(id)
+	if collection == nil {
+		return model.Collection{}, fmt.Errorf("collection with id %d not found", id)
+	}
+
+	if updates.Name != "" {
+		collection.Name = updates.Name
+	}
+	if updates.HexColor != "" {
+		collection.HexColor = updates.HexColor
+	}
+
+	return *collection, nil
 }
