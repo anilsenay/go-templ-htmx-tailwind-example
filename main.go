@@ -30,6 +30,7 @@ func main() {
 	app.Get("/collection/close", collectionHandler.HandleCloseModal)
 	app.Post("/collection/", collectionHandler.HandleCreateCollection)
 	app.Put("/collection/:id", collectionHandler.HandleUpdateCollection)
+	app.Delete("/collection/:id", collectionHandler.HandleDeleteCollection)
 
 	// 404
 	app.Use(func(c *fiber.Ctx) error {

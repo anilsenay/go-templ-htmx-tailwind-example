@@ -126,10 +126,11 @@ func (r *TodoRepository) Delete(collectionId int, id int) error {
 
 func (r *TodoRepository) InsertCollection(collection model.Collection) (model.Collection, error) {
 	r.mutex.Lock()
-	collection.Id = r.nextCollectionId
+	id := r.nextCollectionId
+	collection.Id = id
 	r.nextCollectionId++
 	r.collections = append(r.collections, collection)
-	r.todoByCollection[collection.Id] = []model.Todo{}
+	r.todoByCollection[id] = []model.Todo{}
 	r.mutex.Unlock()
 	return collection, nil
 }
@@ -148,4 +149,21 @@ func (r *TodoRepository) UpdateCollection(id int, updates model.Collection) (mod
 	}
 
 	return *collection, nil
+}
+
+func (r *TodoRepository) DeleteCollection(id int) error {
+	idx := slices.IndexFunc(r.collections, func(e model.Collection) bool {
+		return e.Id == id
+	})
+	if idx == -1 {
+		return fmt.Errorf("collection with id:%d not found", id)
+	}
+
+	collection := r.collections[idx]
+	r.mutex.Lock()
+	delete(r.todoByCollection, collection.Id)
+	r.collections = append(r.collections[:idx], r.collections[idx+1:]...)
+	r.mutex.Unlock()
+
+	return nil
 }

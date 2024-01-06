@@ -13,6 +13,7 @@ type collectionRepository interface {
 	GetCollection(id int) (model.Collection, error)
 	InsertCollection(collection model.Collection) (model.Collection, error)
 	UpdateCollection(id int, updates model.Collection) (model.Collection, error)
+	DeleteCollection(id int) error
 }
 
 type CollectionHandler struct {
@@ -72,5 +73,20 @@ func (h *CollectionHandler) HandleUpdateCollection(ctx *fiber.Ctx) error {
 	}
 
 	ctx.Set("HX-Location", fmt.Sprintf("/%d", collection.Id))
+	return nil
+}
+
+func (h *CollectionHandler) HandleDeleteCollection(ctx *fiber.Ctx) error {
+	id, err := ctx.ParamsInt("id")
+	if err != nil {
+		return err
+	}
+
+	err = h.collectionRepository.DeleteCollection(id)
+	if err != nil {
+		return err
+	}
+
+	ctx.Set("HX-Location", "/")
 	return nil
 }
