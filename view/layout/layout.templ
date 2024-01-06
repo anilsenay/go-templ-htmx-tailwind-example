@@ -1,10 +1,14 @@
 package layout
 
-templ Layout() {
+templ Layout(title string) {
 	<!DOCTYPE html>
 	<html>
 		<head>
-			<title>My Todo</title>
+			if title == "" {
+				<title>My Todo</title>
+			} else {
+				<title>{ title }</title>
+			}
 			<link href="/styles/tailwind-output.css" rel="stylesheet"/>
 			<link href="/styles/global.css" rel="stylesheet"/>
 			<script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>

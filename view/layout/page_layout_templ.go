@@ -14,6 +14,7 @@ import "github.com/anilsenay/go-htmx-example/model"
 import "github.com/anilsenay/go-htmx-example/view/components"
 
 type PageProps struct {
+	Title     string
 	MenuItems []model.Collection
 	Active    int
 }
@@ -114,7 +115,7 @@ func PageLayout(props PageProps) templ.Component {
 			}
 			return templ_7745c5c3_Err
 		})
-		templ_7745c5c3_Err = Layout().Render(templ.WithChildren(ctx, templ_7745c5c3_Var5), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Layout(props.Title).Render(templ.WithChildren(ctx, templ_7745c5c3_Var5), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

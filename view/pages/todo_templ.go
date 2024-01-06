@@ -15,9 +15,8 @@ import "github.com/anilsenay/go-htmx-example/view/components"
 import "github.com/anilsenay/go-htmx-example/model"
 
 type TodoPageProps struct {
-	Collections         []model.Collection
-	Active              int
 	ColllectionWithTodo model.CollectionWithTodoList
+	PageLayoutProps     layout.PageProps
 }
 
 func TodoPage(props TodoPageProps) templ.Component {
@@ -43,7 +42,7 @@ func TodoPage(props TodoPageProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			if props.Active != 0 {
+			if props.PageLayoutProps.Active != 0 {
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"max-w-full p-8 bg-white rounded-lg shadow-lg w-96\"><div class=\"flex items-center mb-6\"><svg class=\"h-8 w-8 text-indigo-500\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
@@ -59,7 +58,7 @@ func TodoPage(props TodoPageProps) templ.Component {
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(props.ColllectionWithTodo.Name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/pages/todo.templ`, Line: 29, Col: 40}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/pages/todo.templ`, Line: 28, Col: 40}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -97,7 +96,7 @@ func TodoPage(props TodoPageProps) templ.Component {
 			}
 			return templ_7745c5c3_Err
 		})
-		templ_7745c5c3_Err = layout.PageLayout(layout.PageProps{MenuItems: props.Collections, Active: props.Active}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = layout.PageLayout(props.PageLayoutProps).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

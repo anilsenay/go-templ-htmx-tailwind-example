@@ -9,7 +9,7 @@ templ ErrorPage(code int, message string) {
 	if message == "" {
 		message = defaultErrorMessage
 	}
-	@layout.Layout() {
+	@layout.Layout("Oops") {
 		<div class="min-h-screen flex flex-grow items-center justify-center bg-gray-50">
 			<div class="rounded-lg bg-white p-8 text-center shadow-xl">
 				<h1 class="mb-4 text-4xl font-bold">{ strconv.Itoa(code) }</h1>

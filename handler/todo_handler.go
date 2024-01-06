@@ -5,6 +5,7 @@ import (
 
 	"github.com/anilsenay/go-htmx-example/model"
 	"github.com/anilsenay/go-htmx-example/view/components"
+	"github.com/anilsenay/go-htmx-example/view/layout"
 	"github.com/anilsenay/go-htmx-example/view/pages"
 	"github.com/gofiber/fiber/v2"
 )
@@ -32,7 +33,9 @@ func (h *TodoHandler) HandleIndexPage(ctx *fiber.Ctx) error {
 	if err != nil {
 		return render(ctx, pages.ErrorPage(fiber.StatusInternalServerError, "Internal Server Error: "+err.Error()))
 	}
-	return render(ctx, pages.TodoPage(pages.TodoPageProps{Collections: collections}))
+	return render(ctx, pages.TodoPage(pages.TodoPageProps{
+		PageLayoutProps: layout.PageProps{MenuItems: collections, Title: "My Collections"},
+	}))
 }
 
 func (h *TodoHandler) HandleTodoPage(ctx *fiber.Ctx) error {
@@ -50,7 +53,10 @@ func (h *TodoHandler) HandleTodoPage(ctx *fiber.Ctx) error {
 	if err != nil {
 		return render(ctx, pages.ErrorPage(fiber.StatusInternalServerError, "Internal Server Error: "+err.Error()))
 	}
-	return render(ctx, pages.TodoPage(pages.TodoPageProps{Collections: collections, ColllectionWithTodo: todo, Active: collectionId}))
+	return render(ctx, pages.TodoPage(pages.TodoPageProps{
+		ColllectionWithTodo: todo,
+		PageLayoutProps:     layout.PageProps{Active: collectionId, MenuItems: collections, Title: todo.Name},
+	}))
 }
 
 func (h *TodoHandler) HandlePostTodo(ctx *fiber.Ctx) error {

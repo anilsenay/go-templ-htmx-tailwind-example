@@ -4,6 +4,7 @@ import "github.com/anilsenay/go-htmx-example/model"
 import "github.com/anilsenay/go-htmx-example/view/components"
 
 type PageProps struct {
+	Title     string
 	MenuItems []model.Collection
 	Active    int
 }
@@ -31,7 +32,7 @@ templ CollectionsMenu(menuItems []model.Collection, active int) {
 }
 
 templ PageLayout(props PageProps) {
-	@Layout() {
+	@Layout(props.Title) {
 		<div id="page-layout" class="grid grid-cols-5">
 			@CollectionsMenu(props.MenuItems, props.Active)
 			<div class="col-span-4">
