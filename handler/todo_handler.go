@@ -8,6 +8,7 @@ import (
 	"github.com/anilsenay/go-htmx-example/view/layout"
 	"github.com/anilsenay/go-htmx-example/view/pages"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/utils"
 )
 
 type todoRepository interface {
@@ -65,7 +66,7 @@ func (h *TodoHandler) HandlePostTodo(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	todoText := ctx.FormValue("todo-text")
+	todoText := utils.CopyString(ctx.FormValue("todo-text"))
 	if todoText == "" {
 		return render(ctx, components.AddTodoErrorText(errors.New("Todo text can not be empty")))
 	}

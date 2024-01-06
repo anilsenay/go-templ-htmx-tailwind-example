@@ -7,6 +7,7 @@ import (
 	"github.com/anilsenay/go-htmx-example/view/components"
 	"github.com/anilsenay/go-htmx-example/view/pages"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/utils"
 )
 
 type collectionRepository interface {
@@ -48,8 +49,8 @@ func (h *CollectionHandler) HandleCloseModal(ctx *fiber.Ctx) error {
 }
 
 func (h *CollectionHandler) HandleCreateCollection(ctx *fiber.Ctx) error {
-	name := ctx.FormValue("name")
-	color := ctx.FormValue("color")
+	name := utils.CopyString(ctx.FormValue("name"))
+	color := utils.CopyString(ctx.FormValue("color"))
 	collection, err := h.collectionRepository.InsertCollection(model.Collection{Name: name, HexColor: color})
 	if err != nil {
 		return render(ctx, pages.ErrorPage(fiber.StatusInternalServerError, "Internal Server Error: "+err.Error()))
@@ -65,8 +66,8 @@ func (h *CollectionHandler) HandleUpdateCollection(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	name := ctx.FormValue("name")
-	color := ctx.FormValue("color")
+	name := utils.CopyString(ctx.FormValue("name"))
+	color := utils.CopyString(ctx.FormValue("color"))
 	collection, err := h.collectionRepository.UpdateCollection(id, model.Collection{Name: name, HexColor: color})
 	if err != nil {
 		return render(ctx, pages.ErrorPage(fiber.StatusInternalServerError, "Internal Server Error: "+err.Error()))
