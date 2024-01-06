@@ -22,14 +22,16 @@ type TodoRepository struct {
 	collections      []model.Collection
 	todoByCollection map[int][]model.Todo
 	mutex            sync.RWMutex
-	nextId           int
+	nextTodoId       int
+	nextCollectionId int
 }
 
 func NewTodoRepository() *TodoRepository {
 	return &TodoRepository{
 		collections:      initialCollections,
 		todoByCollection: todoByCollection,
-		nextId:           5,
+		nextTodoId:       5,
+		nextCollectionId: 3,
 	}
 }
 
@@ -76,8 +78,8 @@ func (r *TodoRepository) Insert(collectionId int, todo model.Todo) (model.Todo, 
 	}
 
 	r.mutex.Lock()
-	todo.Id = r.nextId
-	r.nextId++
+	todo.Id = r.nextTodoId
+	r.nextTodoId++
 	r.todoByCollection[collectionId] = append(r.todoByCollection[collectionId], todo)
 	r.mutex.Unlock()
 	return todo, nil
@@ -112,4 +114,14 @@ func (r *TodoRepository) Delete(collectionId int, id int) error {
 	r.todoByCollection[collectionId] = append(r.todoByCollection[collectionId][:idx], r.todoByCollection[collectionId][idx+1:]...)
 	r.mutex.Unlock()
 	return nil
+}
+
+func (r *TodoRepository) InsertCollection(collection model.Collection) (model.Collection, error) {
+	r.mutex.Lock()
+	collection.Id = r.nextCollectionId
+	r.nextCollectionId++
+	r.collections = append(r.collections, collection)
+	r.todoByCollection[collection.Id] = []model.Todo{}
+	r.mutex.Unlock()
+	return collection, nil
 }

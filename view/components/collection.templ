@@ -1,0 +1,27 @@
+package components
+
+import "fmt"
+import "github.com/anilsenay/go-htmx-example/model"
+
+func generateBgColor(hex string) templ.Attributes {
+	return templ.Attributes{"style": "background-color:" + hex}
+}
+
+templ Collection(collection model.Collection, isActive bool) {
+	<a
+		hx-get={ fmt.Sprintf("/%d", collection.Id) }
+		hx-select="#page-layout"
+		hx-target="#page-layout"
+		hx-swap="outerHTML"
+		hx-replace-url="true"
+		class="flex items-center space-x-2.5 rounded-md px-6 py-3 hover:bg-gray-100 hover:text-blue-600 cursor-pointer"
+	>
+		<div
+			{ generateBgColor(collection.HexColor)... }
+			class="w-7 h-7 rounded-md bg-red-200"
+		></div>
+		<span class={ "text-md", templ.KV("font-semibold", isActive) }>
+			{ collection.Name }
+		</span>
+	</a>
+}

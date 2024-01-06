@@ -15,6 +15,7 @@ func main() {
 
 	todoRepository := repository.NewTodoRepository()
 	todoHandler := handler.NewTodoHandler(todoRepository)
+	collectionHandler := handler.NewCollectionHandler(todoRepository)
 
 	// todo routes
 	app.Get("/:collectionId", todoHandler.HandleTodoPage)
@@ -22,6 +23,11 @@ func main() {
 	app.Put("/:collectionId/todo/:id/done", todoHandler.HandleUpdateDone)
 	app.Post("/:collectionId/todo", todoHandler.HandlePostTodo)
 	app.Delete("/:collectionId/todo/:id", todoHandler.HandleDeleteTodo)
+
+	// collection routes
+	app.Get("/collection/new", collectionHandler.HandleNewModal)
+	app.Get("/collection/close", collectionHandler.HandleCloseModal)
+	app.Post("/collection/", collectionHandler.HandleCreateCollection)
 
 	// 404
 	app.Use(func(c *fiber.Ctx) error {
