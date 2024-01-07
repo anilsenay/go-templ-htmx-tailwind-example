@@ -56,7 +56,7 @@ func EditCollectionModal(collection model.Collection) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(collection.HexColor))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(collection.Color))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

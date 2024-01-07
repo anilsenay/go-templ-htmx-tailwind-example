@@ -48,7 +48,7 @@ func TodoPage(props TodoPageProps) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(props.CollectionWithTodo.HexColor))
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(props.CollectionWithTodo.Color))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

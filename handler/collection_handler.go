@@ -12,9 +12,9 @@ import (
 
 type collectionRepository interface {
 	GetCollection(id int) (model.Collection, error)
-	InsertCollection(collection model.Collection) (model.Collection, error)
-	UpdateCollection(id int, updates model.Collection) (model.Collection, error)
-	DeleteCollection(id int) error
+	Insert(collection model.Collection) (model.Collection, error)
+	Update(id int, updates model.Collection) (model.Collection, error)
+	Delete(id int) error
 }
 
 type CollectionHandler struct {
@@ -48,10 +48,10 @@ func (h *CollectionHandler) HandleCloseModal(ctx *fiber.Ctx) error {
 	return nil
 }
 
-func (h *CollectionHandler) HandleCreateCollection(ctx *fiber.Ctx) error {
+func (h *CollectionHandler) HandleCreate(ctx *fiber.Ctx) error {
 	name := utils.CopyString(ctx.FormValue("name"))
 	color := utils.CopyString(ctx.FormValue("color"))
-	collection, err := h.collectionRepository.InsertCollection(model.Collection{Name: name, HexColor: color})
+	collection, err := h.collectionRepository.Insert(model.Collection{Name: name, Color: color})
 	if err != nil {
 		return render(ctx, pages.ErrorPage(fiber.StatusInternalServerError, "Internal Server Error: "+err.Error()))
 	}
@@ -60,7 +60,7 @@ func (h *CollectionHandler) HandleCreateCollection(ctx *fiber.Ctx) error {
 	return nil
 }
 
-func (h *CollectionHandler) HandleUpdateCollection(ctx *fiber.Ctx) error {
+func (h *CollectionHandler) HandleUpdate(ctx *fiber.Ctx) error {
 	id, err := ctx.ParamsInt("id")
 	if err != nil {
 		return err
@@ -68,7 +68,7 @@ func (h *CollectionHandler) HandleUpdateCollection(ctx *fiber.Ctx) error {
 
 	name := utils.CopyString(ctx.FormValue("name"))
 	color := utils.CopyString(ctx.FormValue("color"))
-	collection, err := h.collectionRepository.UpdateCollection(id, model.Collection{Name: name, HexColor: color})
+	collection, err := h.collectionRepository.Update(id, model.Collection{Name: name, Color: color})
 	if err != nil {
 		return render(ctx, pages.ErrorPage(fiber.StatusInternalServerError, "Internal Server Error: "+err.Error()))
 	}
@@ -77,13 +77,13 @@ func (h *CollectionHandler) HandleUpdateCollection(ctx *fiber.Ctx) error {
 	return nil
 }
 
-func (h *CollectionHandler) HandleDeleteCollection(ctx *fiber.Ctx) error {
+func (h *CollectionHandler) HandleDelete(ctx *fiber.Ctx) error {
 	id, err := ctx.ParamsInt("id")
 	if err != nil {
 		return err
 	}
 
-	err = h.collectionRepository.DeleteCollection(id)
+	err = h.collectionRepository.Delete(id)
 	if err != nil {
 		return err
 	}

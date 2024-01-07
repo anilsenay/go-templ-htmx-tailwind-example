@@ -1,21 +1,35 @@
 package main
 
 import (
+	"context"
+	"fmt"
+
 	"github.com/anilsenay/go-htmx-example/handler"
 	"github.com/anilsenay/go-htmx-example/repository"
 	"github.com/anilsenay/go-htmx-example/view/pages"
 	"github.com/gofiber/fiber/v2"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 func main() {
 	app := fiber.New(fiber.Config{})
 
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		"localhost", 5432, "postgres", "123456", "go-htmx-example")
+
+	cfg, _ := pgxpool.ParseConfig(psqlInfo)
+	db, err := pgxpool.NewWithConfig(context.Background(), cfg)
+	if err != nil {
+		panic(err)
+	}
+	todoRepository := repository.NewTodoRepository(db)
+	collectionRepository := repository.NewCollectionRepository(db)
+	todoHandler := handler.NewTodoHandler(todoRepository, collectionRepository)
+	collectionHandler := handler.NewCollectionHandler(collectionRepository)
+
 	// static files
 	app.Static("/", "./public")
-
-	todoRepository := repository.NewTodoRepository()
-	todoHandler := handler.NewTodoHandler(todoRepository)
-	collectionHandler := handler.NewCollectionHandler(todoRepository)
 
 	// todo routes
 	app.Get("/:collectionId", todoHandler.HandleTodoPage)
@@ -28,9 +42,9 @@ func main() {
 	app.Get("/collection/new", collectionHandler.HandleNewModal)
 	app.Get("/collection/edit/:id", collectionHandler.HandleEditModal)
 	app.Get("/collection/close", collectionHandler.HandleCloseModal)
-	app.Post("/collection/", collectionHandler.HandleCreateCollection)
-	app.Put("/collection/:id", collectionHandler.HandleUpdateCollection)
-	app.Delete("/collection/:id", collectionHandler.HandleDeleteCollection)
+	app.Post("/collection/", collectionHandler.HandleCreate)
+	app.Put("/collection/:id", collectionHandler.HandleUpdate)
+	app.Delete("/collection/:id", collectionHandler.HandleDelete)
 
 	// 404
 	app.Use(func(c *fiber.Ctx) error {

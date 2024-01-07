@@ -7,9 +7,9 @@ type Todo struct {
 }
 
 type Collection struct {
-	Id       int
-	Name     string
-	HexColor string
+	Id    int
+	Name  string
+	Color string
 }
 
 type CollectionWithTodoList struct {

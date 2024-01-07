@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  db:
+    image: postgres:14-alpine
+    container_name: postgres-go-htmx-example
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_HOST_AUTH_METHOD: password
+      POSTGRES_DB: go-htmx-example
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db.sql:/docker-entrypoint-initdb.d/create_tables.sql

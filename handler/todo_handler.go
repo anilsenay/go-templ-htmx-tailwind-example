@@ -12,25 +12,31 @@ import (
 )
 
 type todoRepository interface {
-	GetCollections() ([]model.Collection, error)
-	GetTodoByCollection(id int) (model.CollectionWithTodoList, error)
+	GetTodoByCollection(c model.Collection) (model.CollectionWithTodoList, error)
 	Insert(collectionId int, todo model.Todo) (model.Todo, error)
 	ChangeDone(collectionId int, id int) (*model.Todo, error)
 	Delete(collectionId int, id int) error
 }
 
-type TodoHandler struct {
-	todoRepository todoRepository
+type todoHandlerCollectionRepository interface {
+	GetCollections() ([]model.Collection, error)
+	GetCollection(id int) (model.Collection, error)
 }
 
-func NewTodoHandler(r todoRepository) *TodoHandler {
+type TodoHandler struct {
+	todoRepository       todoRepository
+	collectionRepository todoHandlerCollectionRepository
+}
+
+func NewTodoHandler(tr todoRepository, cr todoHandlerCollectionRepository) *TodoHandler {
 	return &TodoHandler{
-		todoRepository: r,
+		todoRepository:       tr,
+		collectionRepository: cr,
 	}
 }
 
 func (h *TodoHandler) HandleIndexPage(ctx *fiber.Ctx) error {
-	collections, err := h.todoRepository.GetCollections()
+	collections, err := h.collectionRepository.GetCollections()
 	if err != nil {
 		return render(ctx, pages.ErrorPage(fiber.StatusInternalServerError, "Internal Server Error: "+err.Error()))
 	}
@@ -45,12 +51,17 @@ func (h *TodoHandler) HandleTodoPage(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	collections, err := h.todoRepository.GetCollections()
+	collections, err := h.collectionRepository.GetCollections()
 	if err != nil {
 		return render(ctx, pages.ErrorPage(fiber.StatusInternalServerError, "Internal Server Error: "+err.Error()))
 	}
 
-	todo, err := h.todoRepository.GetTodoByCollection(collectionId)
+	collection, err := h.collectionRepository.GetCollection(collectionId)
+	if err != nil {
+		return err
+	}
+
+	todo, err := h.todoRepository.GetTodoByCollection(collection)
 	if err != nil {
 		return render(ctx, pages.ErrorPage(fiber.StatusInternalServerError, "Internal Server Error: "+err.Error()))
 	}

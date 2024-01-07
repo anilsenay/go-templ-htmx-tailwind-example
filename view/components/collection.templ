@@ -17,7 +17,7 @@ templ Collection(collection model.Collection, isActive bool) {
 		class="flex items-center space-x-2.5 rounded-md px-6 py-3 hover:bg-gray-100 hover:text-blue-600 cursor-pointer"
 	>
 		<div
-			{ generateBgColor(collection.HexColor)... }
+			{ generateBgColor(collection.Color)... }
 			class="w-7 h-7 rounded-md bg-red-200"
 		></div>
 		<span class={ "text-md", templ.KV("font-semibold", isActive) }>

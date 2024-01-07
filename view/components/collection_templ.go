@@ -42,7 +42,7 @@ func Collection(collection model.Collection, isActive bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, generateBgColor(collection.HexColor))
+		templ_7745c5c3_Err = templ.RenderAttributes(ctx, templ_7745c5c3_Buffer, generateBgColor(collection.Color))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
