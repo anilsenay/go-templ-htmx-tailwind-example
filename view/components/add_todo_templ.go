@@ -77,7 +77,7 @@ func AddTodoErrorText(err error) templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<span id=\"validation-error\" class=\"flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1\" hx-swap-oob=\"true\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<span id=\"validation-error\" class=\"flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -95,7 +95,7 @@ func AddTodoErrorText(err error) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(err.Error())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/components/add_todo.templ`, Line: 43, Col: 16}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/components/add_todo.templ`, Line: 42, Col: 16}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -134,7 +134,7 @@ func AddTodo(collectionId int) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#todo-list\" hx-swap=\"beforeend\" hx-on::after-request=\"if(event.detail.successful) { this.reset() }\" hx-disabled-elt=\"#post-button\" hx-indicator=\"#spinner\" class=\"flex items-center w-full h-8 mt-2 text-sm font-medium rounded\"><button id=\"post-button\" type=\"submit\" class=\"flex items-center px-2 h-8\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#todo-list\" hx-swap=\"beforeend\" hx-on::after-request=\"if(event.detail.successful) { this.reset() }\" hx-disabled-elt=\"#post-button\" hx-indicator=\"#spinner\" hx-select-oob=\"#validation-error\" class=\"flex items-center w-full h-8 mt-2 text-sm font-medium rounded\"><button id=\"post-button\" type=\"submit\" class=\"flex items-center px-2 h-8\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

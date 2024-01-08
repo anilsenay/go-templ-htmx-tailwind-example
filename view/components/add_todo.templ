@@ -35,7 +35,6 @@ templ AddTodoErrorText(err error) {
 	<span
 		id="validation-error"
 		class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1"
-		hx-swap-oob="true"
 		if err == nil {
 			style="display:none"
 		}
@@ -55,6 +54,7 @@ templ AddTodo(collectionId int) {
 		hx-on::after-request="if(event.detail.successful) { this.reset() }"
 		hx-disabled-elt="#post-button"
 		hx-indicator="#spinner"
+		hx-select-oob="#validation-error"
 		class="flex items-center w-full h-8 mt-2 text-sm font-medium rounded"
 	>
 		<button
