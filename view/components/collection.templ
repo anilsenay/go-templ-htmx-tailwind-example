@@ -9,6 +9,7 @@ func generateBgColor(hex string) templ.Attributes {
 
 templ Collection(collection model.Collection, isActive bool) {
 	<a
+		id={ fmt.Sprintf("collection-%d", collection.Id) }
 		hx-get={ fmt.Sprintf("/%d", collection.Id) }
 		hx-select="#page-layout"
 		hx-target="#page-layout"

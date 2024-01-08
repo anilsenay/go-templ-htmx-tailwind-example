@@ -73,8 +73,11 @@ func (h *CollectionHandler) HandleUpdate(ctx *fiber.Ctx) error {
 		return render(ctx, pages.ErrorPage(fiber.StatusInternalServerError, "Internal Server Error: "+err.Error()))
 	}
 
-	ctx.Set("HX-Location", fmt.Sprintf("/%d", collection.Id))
-	return nil
+	return combine(
+		ctx,
+		components.Collection(collection, true),
+		components.TodoTitle(collection),
+	)
 }
 
 func (h *CollectionHandler) HandleDelete(ctx *fiber.Ctx) error {
