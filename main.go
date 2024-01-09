@@ -12,7 +12,9 @@ import (
 )
 
 func main() {
-	app := fiber.New(fiber.Config{})
+	app := fiber.New(fiber.Config{
+		DisableStartupMessage: true,
+	})
 
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
@@ -53,5 +55,7 @@ func main() {
 		return pages.NotFound().Render(c.UserContext(), c.Response().BodyWriter())
 	})
 
+	fmt.Println("Server is running on http://localhost:8080")
+	fmt.Println("UI proxy is running on http://localhost:3000")
 	_ = app.Listen(":8080")
 }

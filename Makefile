@@ -1,4 +1,5 @@
 run:
+	browser-sync start --port 3000 --proxy 'http://localhost:8080' --no-ui --no-open &
 	air
 
 build:
